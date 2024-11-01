@@ -6,9 +6,6 @@
  * @Description:
  */
 use std::env;
-use std::fs::File;
-use std::io::{self, Read};
-use std::time::{SystemTime, UNIX_EPOCH};
 
 use dotenv::dotenv;
 
@@ -18,7 +15,9 @@ pub fn get_env_var(key: &str) -> String {
 
     // 根据操作系统类型设置不同的路径
     #[cfg(target_os = "windows")]
+    #[warn(unused_assignments)]
     {
+
         env_file_path = "C:\\Program Files\\apple".to_string();
     }
 

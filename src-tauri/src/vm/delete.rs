@@ -1,4 +1,3 @@
-use crate::vm::vmrun;
 
 // pub async fn vmrun_copy_file_from_guest_to_host(index: usize, vm_name: String, guest_vmx: String) {
 //     println!("  > 线程  {}", index);

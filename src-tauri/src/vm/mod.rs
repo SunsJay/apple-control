@@ -1,11 +1,9 @@
 mod copy;
 mod delete;
 
-use std::time;
 
 use lazy_static::lazy_static;
 use tokio::sync::Mutex as AsyncMutex;
-use tokio::time::timeout;
 use crate::utils::time::get_timestamp;
 
 
@@ -83,7 +81,7 @@ pub async fn vmrun_clone(vm_exe_path: String, master_mac_path: String, son_mac_p
 
     let son_mac_path = format!("{}\\{}\\{}.vmx", &son_mac_path, vm_name, vm_name);
     let clone_name = format!("-cloneName={}", vm_name);
-    let res = vmrun(vm_exe_path.clone(), Vec::from([
+    let _res = vmrun(vm_exe_path.clone(), Vec::from([
         "-T".to_string(),
         "ws".to_string(),
         "clone".to_string(),

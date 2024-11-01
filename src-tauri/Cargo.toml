@@ -29,7 +29,7 @@ tauri-plugin-http = "2"
 tauri-plugin-localhost = "2"
 tauri-plugin-notification = "2"
 tauri-plugin-os = "2"
-tauri-plugin-sql = { version = "2", features = ["mysql"] }
+#tauri-plugin-sql = { version = "2", features = ["mysql"] }
 tauri-plugin-persisted-scope = "2.0.0"
 tauri-plugin-clipboard-manager = "2.0.1"
 tauri-plugin-store = "2"
