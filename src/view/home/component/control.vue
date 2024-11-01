@@ -11,7 +11,7 @@
       <el-button type="primary" @click="handleStartCommand" plain
         >启动控制台</el-button
       >
-      <el-button type="danger" @click="handleStopCommand" plain
+      <el-button type="danger" @click="handleStopCommand" plain :disabled="stopBtn"
         >停止控制台</el-button
       >
       <el-button type="warning" @click="handleClearInvalidVm" plain
@@ -59,7 +59,7 @@
     </div>
     <div class="row">
       <div class="console">
-        <p v-for="(item, i) in logs" :key="i" :style="{ color: item.color }">
+        <p v-for="(item, i) in log.logs" :key="i" :style="{ color: item.color }">
           <span>{{ item.time }}</span
           ><span>{{ item.message }}</span>
         </p>
@@ -69,31 +69,14 @@
 </template>
 <script setup lang="ts">
 import { ref, getCurrentInstance } from "vue";
+import useStore from "@/store";
 const { proxy } = getCurrentInstance();
-type Log = {
-  time: string;
-  message: string;
-  color: string;
-};
-const logs = ref<Log[]>([]);
+const { log, app } = useStore()
 
+const stopBtn = ref(true);
 // addLog 新增日志记录
 const addLog = (message: string, color: string = "#333") => {
-  const currentDate = new Date();
-
-  // 获取年、月、日、小时、分钟和秒
-  const year = currentDate.getFullYear(); // 获取年份
-  const month = currentDate.getMonth() + 1; // 获取月份（月份从0开始，所以要加    1）
-  const day = currentDate.getDate(); // 获取日
-  const hours = currentDate.getHours(); // 获取小时
-  const minutes = currentDate.getMinutes(); // 获取分钟
-  const seconds = currentDate.getSeconds(); // 获取秒
-  const timeStr = `${year}-${month}-${day} ${hours}:${minutes}:${seconds} `;
-  logs.value.push({
-    time: timeStr,
-    message: message,
-    color: color,
-  });
+  log.addLog(message, color);
 };
 
 // 启动控制台
@@ -115,7 +98,7 @@ const handleClearInvalidVm = () => {
 // handleClearConsole 清空控制台日志
 const handleClearConsole = () => {
   proxy.$message.info("清空控制台日志");
-  logs.value = [];
+  log.clearLog()
 };
 </script>
 <style scoped>
