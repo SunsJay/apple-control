@@ -1,10 +1,14 @@
+mod copy;
+mod delete;
+
 use std::time;
 
 use lazy_static::lazy_static;
 use tokio::sync::Mutex as AsyncMutex;
 use tokio::time::timeout;
+use crate::utils::time::get_timestamp;
 
-use crate::utils::{get_timestamp, read};
+
 
 lazy_static! {
     pub static ref VMRUNEXE: AsyncMutex<&'static str> =
@@ -39,7 +43,6 @@ pub async fn vmrun(vm_exe_path: String, args: Vec<String>) -> String {
     #[cfg(target_os = "macos")]
     let output = tokio::process::Command::new(vm_exe_path)
         .args(args)
-        // .creation_flags(0x08000000)
         .output()
         .await
         .expect("Failed to execute command");
@@ -53,6 +56,8 @@ pub async fn vmrun(vm_exe_path: String, args: Vec<String>) -> String {
     }
 }
 
+
+// 列出正在运行的虚拟机列表
 #[tauri::command]
 pub async fn vmrun_list(vm_exe_path: String) -> (&'static str, usize) {
     let res = vmrun(vm_exe_path, vec!["-T".to_string(), "ws".to_string(), "list".to_string()]).await;
@@ -92,7 +97,7 @@ pub async fn vmrun_clone(vm_exe_path: String, master_mac_path: String, son_mac_p
     let res = vmrun(vm_exe_path.clone(), Vec::from([
         "-T".to_string(),
         "ws".to_string(),
-        "start".to_string(),
+        "start.rs".to_string(),
         son_mac_path.clone(),
         "nogui".to_string(),
     ])).await;
@@ -101,55 +106,3 @@ pub async fn vmrun_clone(vm_exe_path: String, master_mac_path: String, son_mac_p
 }
 
 
-// pub async fn vmrun_copy_file_from_guest_to_host(index: usize, vm_name: String, guest_vmx: String) {
-//     println!("  > 线程  {}", index);
-//     println!("  > {} ==> 检查ID", vm_name);
-//     println!();
-//     let vm_path = format!("D:\\vm-sms\\{}.txt", vm_name);
-//     let guest_path = "/Users/cc/apple-id.txt".to_string();
-//     let vm_path_clone = vm_path.clone();
-//     let guest_vmx_clone = guest_vmx.clone();
-//     let guest_path_clone = guest_path.clone();
-//
-//     let _ = timeout(
-//         time::Duration::from_secs(20),
-//         vmrun(vec![
-//             "-T".to_string(),
-//             "ws".to_string(),
-//             "-gu".to_string(),
-//             "cc".to_string(),
-//             "-gp".to_string(),
-//             "123456".to_string(),
-//             "copyFileFromGuestToHost".to_string(),
-//             guest_vmx_clone,
-//             guest_path_clone,
-//             vm_path_clone,
-//         ]),
-//     )
-//         .await;
-//
-//     let content = read(&vm_path).unwrap_or_default();
-//     // if !content.is_empty() {
-//     //     apple_id_upload(index, &vm_name, content.clone())
-//     //         .await
-//     //         .unwrap();
-//     // }
-//
-//     let guest_vmx_clone = guest_vmx.clone();
-//     let guest_path_clone = guest_path.clone();
-//     let _ = timeout(
-//         time::Duration::from_secs(20),
-//         vmrun(vec![
-//             "-T".to_string(),
-//             "ws".to_string(),
-//             "-gu".to_string(),
-//             "cc".to_string(),
-//             "-gp".to_string(),
-//             "123456".to_string(),
-//             "deleteFileInGuest".to_string(),
-//             guest_vmx_clone,
-//             guest_path_clone,
-//         ]),
-//     )
-//         .await;
-// }
