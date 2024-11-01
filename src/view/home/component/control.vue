@@ -1,7 +1,7 @@
 <!--
  * @Date: 2024-11-01 13:00:41
  * @LastEditors: sunsjay sunsjay0806@gmail.com
- * @LastEditTime: 2024-11-01 15:15:48
+ * @LastEditTime: 2024-11-01 15:37:32
  * @FilePath: /apple-control/src/view/home/component/control.vue
  * @Description: 
 -->
@@ -128,6 +128,7 @@ const handleClearConsole = () => {
   text-align: left;
   height: 300px;
   overflow-y: auto;
+  margin-top: 10px;
 }
 .console p {
   padding-left: 10px;
